@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Chào mừng bạn</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --sea-1: #0077be;
+            --sea-2: #001f3f;
+            --glass: rgba(255, 255, 255, 0.15);
+            --accent: #80deea;
+            --text: #e0f7fa;
+        }
+        
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Playfair Display', serif;
+            color: var(--text);
+            background: linear-gradient(180deg, var(--sea-1) 0%, var(--sea-2) 100%);
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            /* Kỹ thuật căn giữa:
+              Dùng flex để căn khối .container ra giữa màn hình 
+            */
+            display: flex;
+            min-height: 100vh;
+            /* Đảm bảo body cao ít nhất bằng màn hình */
+            /* Xử lý Safe Area (Tai thỏ / Dynamic Island) */
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+        /* Container "Thủy tinh" */
+        
+        .container {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(8px);
+            padding: 40px 45px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 500px;
+            width: 90%;
+            /* Chiếm 90% chiều rộng trên mobile */
+            /* Căn giữa container trong body (flex) */
+            margin: auto;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 200, 255, 0.14);
+            animation: fadeIn 0.9s ease;
+            position: relative;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Tiêu đề "Xin chào" */
+        
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            /* To hơn một chút cho trang chào mừng */
+            color: #b2ebf2;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.35);
+            margin: 0 0 15px;
+        }
+        
+        p {
+            line-height: 1.7;
+            font-size: 1.05rem;
+            color: var(--text);
+            margin: 0 0 25px;
+            opacity: 0.9;
+        }
+        /* Nút điều hướng */
+        
+        .btn-nav {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 12px 34px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #cff9ff;
+            border: 1.6px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s ease, box-shadow .2s ease, background .2s;
+            letter-spacing: 0.6px;
+            text-decoration: none;
+            /* Bỏ gạch chân của thẻ <a> */
+            touch-action: manipulation;
+        }
+        
+        .btn-nav:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 200, 255, 0.08);
+            background: rgba(255, 255, 255, 0.18);
+            color: #003344;
+        }
+        /* Các hiệu ứng bong bóng & cá */
+        
+        .bubble {
+            position: fixed;
+            bottom: -50px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: rise linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes rise {
+            to {
+                transform: translateY(-110vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .fish {
+            position: fixed;
+            bottom: 10%;
+            width: 80px;
+            opacity: 0.85;
+            animation: swim 15s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        @keyframes swim {
+            0% {
+                left: -140px;
+                transform: scaleX(1);
+            }
+            50% {
+                transform: scaleX(1);
+            }
+            51% {
+                transform: scaleX(-1);
+            }
+            100% {
+                left: 110vw;
+                transform: scaleX(-1);
+            }
+        }
+        /* Responsive */
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 25px;
+            }
+            h1 {
+                font-size: 2.8rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            .btn-nav {
+                padding: 10px 25px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Xin chào!</h1>
+        <p>Chào mừng đến với lời nhắn từ đại dương. Hãy chuẩn bị tâm trí thật tĩnh lặng trước khi bắt đầu.</p>
+
+        <a href="SpecialProject2.html" class="btn-nav">Hướng Dẫn Sử dụng 🌊</a>
+    </div>
+
+    <img src="image/—Pngtree—cartoon dolphin vector_13154796.png" class="fish" style="animation-delay: 0s;">
+
+    <script>
+        /* Bong bóng nổi */
+        function createBubble() {
+            const b = document.createElement('div');
+            b.classList.add('bubble');
+            b.style.left = Math.random() * 100 + 'vw';
+            b.style.animationDuration = (Math.random() * 4 + 3) + 's';
+            b.style.width = b.style.height = (Math.random() * 20 + 10) + 'px';
+            document.body.appendChild(b);
+            setTimeout(() => b.remove(), 7000);
+        }
+        setInterval(createBubble, 400);
+    </script>
+</body>
+
+</html>

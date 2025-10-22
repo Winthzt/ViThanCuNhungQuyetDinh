@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gửi chị</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --sea-1: #0077be;
+            --sea-2: #001f3f;
+            --glass: rgba(255, 255, 255, 0.15);
+            --accent: #80deea;
+            --text: #e0f7fa;
+        }
+        
+        html {
+            /* FIX 2: Ngăn iOS tự động phóng to chữ khi xoay ngang */
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        body {
+            /* FIX 3: Thay đổi mô hình cuộn */
+            margin: 0;
+            padding: 0;
+            font-family: 'Playfair Display', serif;
+            color: var(--text);
+            /* Bỏ height: 100%, dùng min-height để body có thể dài ra khi nội dung nhiều */
+            min-height: 100vh;
+            /* Cho phép cuộn ngang nếu lỡ (an toàn), nhưng chủ yếu là cuộn dọc */
+            overflow-x: hidden;
+            background: linear-gradient(180deg, var(--sea-1) 0%, var(--sea-2) 100%);
+            /* FIX 4: Bỏ 'background-attachment: fixed' để tăng mượt mà trên mobile */
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            /* FIX 5: Xử lý Safe Area (Tai thỏ / Dynamic Island / Thanh Home)
+              Thêm padding vào body để nội dung không bị lọt vào vùng "nguy hiểm".
+              Trên thiết bị không có tai thỏ, các biến env() này sẽ = 0.
+            */
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('image/eab53cdc178c4701cf74b2fe8e5fe5d9.jpg') center/cover no-repeat;
+            opacity: 0.28;
+            pointer-events: none;
+            animation: lightMove 12s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+        
+        @keyframes lightMove {
+            0% {
+                transform: translateY(0px);
+            }
+            100% {
+                transform: translateY(-22px);
+            }
+        }
+        
+        .container {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(8px);
+            padding: 30px 36px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 820px;
+            /* FIX 6: Điều chỉnh margin-top/bottom
+              Chúng ta sẽ dùng margin bình thường và để body cuộn.
+              Thêm margin-bottom để khi cuộn hết thư, nó không bị dính sát vào thanh Home.
+            */
+            margin: 48px auto 48px auto;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 200, 255, 0.14);
+            animation: fadeIn 0.9s ease;
+            position: relative;
+            z-index: 2;
+            /* FIX 7: Bỏ giới hạn chiều cao và cuộn riêng của container
+              Để cho body cuộn chính.
+            */
+            /* max-height: calc(100vh - 120px); BỎ */
+            /* overflow-y: auto; BỎ */
+            /* -webkit-overflow-scrolling: touch; BỎ */
+            box-sizing: border-box;
+            /* Thêm để tính toán width/padding dễ hơn */
+        }
+        /* Bỏ các style scrollbar của container vì nó không còn cuộn nữa */
+        
+        .container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1,
+        h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem;
+            color: #b2ebf2;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.35);
+            margin: 6px 0 12px;
+        }
+        
+        h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: #d6f6fb;
+            opacity: 0.95;
+        }
+        
+        .steps p,
+        .intro p,
+        .tips p,
+        .message p {
+            /* Thêm .message p để style chung */
+            line-height: 1.7;
+            font-size: 1.02rem;
+            color: var(--text);
+            margin: 10px 0;
+            /* Căn lề trái cho dễ đọc thư dài */
+            text-align: left;
+        }
+        /* Riêng phần hướng dẫn thì căn giữa lại */
+        
+        #openingScreen .steps p,
+        #openingScreen .intro p,
+        #openingScreen .tips p {
+            text-align: center;
+        }
+        
+        #openingScreen .tips h4 {
+            text-align: center;
+        }
+        /* Căn lề trái cho phần thư */
+        
+        #mainCard .message {
+            text-align: left;
+        }
+        
+        .steps {
+            margin-top: 6px;
+        }
+        
+        .steps p {
+            font-weight: 600;
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+            margin: 18px 0;
+        }
+        
+        .quote {
+            font-style: italic;
+            margin: 20px auto;
+            color: #bfeff6;
+            padding: 14px 18px;
+            border-left: 3px solid var(--accent);
+            background-color: rgba(255, 255, 255, 0.04);
+            max-width: 90%;
+            text-align: center;
+            border-radius: 8px;
+        }
+        
+        button {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 12px 34px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #cff9ff;
+            border: 1.6px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .2s ease, box-shadow .2s ease, background .2s;
+            letter-spacing: 0.6px;
+            /* FIX 8: Giảm độ trễ khi nhấp trên mobile */
+            touch-action: manipulation;
+        }
+        
+        button.back {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid #4dd0e1;
+            color: #b2ebf2;
+            font-size: 0.9em;
+            border-radius: 30px;
+            padding: 8px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button.back:hover {
+            background: #4dd0e1;
+            color: #003344;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 200, 255, 0.08);
+            background: rgba(255, 255, 255, 0.18);
+            color: #003344;
+        }
+        
+        input[type="password"] {
+            padding: 10px 12px;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            margin-top: 10px;
+            /* FIX 9: Tối ưu width cho input */
+            width: 100%;
+            box-sizing: border-box;
+            /* Quan trọng: để width 100% không bị tràn do padding */
+            max-width: 420px;
+            /* Vẫn giữ max-width cho màn hình lớn */
+            background-color: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            text-align: center;
+        }
+        
+        input::placeholder {
+            color: #b2ebf2;
+            opacity: 0.75;
+        }
+        /* FIX 10: Style cho thẻ <h12> đã sửa thành <p class="hint"> */
+        
+        .hint {
+            font-size: 0.9rem;
+            color: #b2ebf2;
+            opacity: 0.8;
+            margin: 12px 0 10px;
+        }
+        
+        .error {
+            color: #ff9b9b;
+            margin-top: 10px;
+            font-weight: 700;
+        }
+        
+        .bubble {
+            position: fixed;
+            bottom: -50px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: rise linear infinite;
+            z-index: 1;
+        }
+        
+        @keyframes rise {
+            to {
+                transform: translateY(-110vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .fish {
+            position: fixed;
+            bottom: 10%;
+            width: 80px;
+            opacity: 0.85;
+            animation: swim 15s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        @keyframes swim {
+            0% {
+                left: -140px;
+                transform: scaleX(1);
+            }
+            50% {
+                transform: scaleX(1);
+            }
+            51% {
+                transform: scaleX(-1);
+            }
+            100% {
+                left: 110vw;
+                transform: scaleX(-1);
+            }
+        }
+        
+        #mainCard {
+            /* Không cần style gì thêm, nó sẽ tự động dãn ra theo nội dung */
+        }
+        /* responsive nhỏ */
+        
+        @media (max-width:720px) {
+            .container {
+                /* FIX 11: Đơn giản hóa media query
+                  Chỉ cần set margin trái/phải để tạo khoảng hở.
+                */
+                padding: 20px 15px;
+                /* Giảm padding ngang một chút */
+                margin: 20px 14px;
+                /* 20px trên/dưới, 14px trái/phải */
+                width: auto;
+                /* Bỏ width, để margin xử lý */
+                max-width: 100%;
+                /* Đảm bảo không vượt quá */
+            }
+            h1 {
+                font-size: 2.4rem;
+            }
+            .steps p,
+            .intro p,
+            .tips p,
+            .message p {
+                /* Áp dụng cho cả message */
+                font-size: 0.98rem;
+                line-height: 1.65;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="openingScreen">
+        <h1>✨ Hướng Dẫn ✨</h1>
+        <h3>“Lời nhắn gửi từ biển cả”</h3>
+
+        <div class="steps">
+            <p>① Đặt tay lên móc khóa.</p>
+            <p>② Nhắm mắt lại — hoàn toàn tập trung vào điều bạn muốn hỏi.</p>
+            <p>③ Đặt một câu hỏi, và hình dung rõ ràng nó trong tâm trí.</p>
+            <p>④ Khi trực giác mách bảo rằng “đã đến lúc”, hãy nhấn vào nút <strong>“Mở ra”</strong> nhé 🌊</p>
+        </div>
+        <button onclick="showWish()">Mở ra 🌊</button>
+        <button onclick="goHome()">Home <i class="fa-solid fa-house" style="color: #ff7300;"></i></button>
+        <div class="container" id="openingScreen">
+            <div class="intro">
+                <p>
+                    Đây không chỉ là một chiếc móc khóa — mà là một <em>cánh cổng giao tiếp</em> giữa bạn và Vũ Trụ. Mỗi khi bạn đặt câu hỏi, những thông điệp tưởng chừng ngẫu nhiên sẽ xuất hiện — nhưng lạ thay, lại đúng đến khó tin.
+                </p>
+                <p>
+                    Điều kỳ diệu không nằm ở câu trả lời, mà ở <strong>cách</strong> câu trả lời đến — đúng vào khoảnh khắc bạn cần. Đó là sự hòa hợp giữa tâm trí bạn và dòng chảy vô hình của Vũ Trụ, nơi chẳng có điều gì là ngẫu nhiên.
+                </p>
+                <p>
+                    Hãy thử một lần đặt tay lên trang sách, nhắm mắt và hỏi:
+                    <em>“Tôi có nên...?”</em> Bạn sẽ nhận ra — điều bạn cần biết, đã luôn ở đó, chỉ chờ bạn tìm đến.
+                </p>
+            </div>
+
+            <div class="tips">
+                <h4>◈ KINH NGHIỆM</h4>
+                <p>
+                    Lần đầu tiên, có thể câu trả lời chưa khớp với câu hỏi. Lý do là vì năng lượng của bạn chưa ổn định, tâm trí chưa thật sự tập trung. Thường đến <strong>lần thứ 3 hoặc 4</strong>, câu trả lời sẽ bắt đầu “khớp” một cách kỳ lạ.
+                </p>
+                <p>
+                    Bí quyết là: Tập trung hoàn toàn vào câu hỏi và sự chuyển động của CÁ, lặp lại câu hỏi trong đầu — cho đến khi bạn nhấn nút mở. Chính khoảnh khắc ấy, thông điệp từ Vũ Trụ sẽ hiện ra.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container" id="wishScreen" style="display: none;">
+        <h2>Lời nhắn từ đại dương</h2>
+        <p id="wishText" style="text-align: center;"></p>
+
+        <button onclick="goHome()">Home <i class="fa-solid fa-house" style="color: #ff7300;"></i></button>
+        <button onclick="goBack()">⬅ Quay lại</button>
+        <br>
+        <button onclick="showLogin()">Ở đây có một lá thư 🐚</button>
+    </div>
+
+    <div class="container" id="login" style="display: none;">
+        <h1>Mật khẩu</h1>
+        <p style="text-align: center;">Nhập mật khẩu</p>
+
+        <p class="hint">Gợi ý nha mật khẩu gồm 26 kí tự</p>
+
+        <br>
+        <input type="password" id="password" placeholder="Mật khẩu...">
+        <br>
+        <button onclick="goHome()">Home <i class="fa-solid fa-house" style="color: #ff7300;"></i></button>
+        <button onclick="goBack()">⬅ Quay lại</button>
+        <br>
+        <button onclick="checkPassword()">Mở thư</button>
+        <div class="error" id="error"></div>
+    </div>
+
+    <div class="container fade-in" id="mainCard" style="display: none;">
+        <h1>Gửi chị!</h1>
+        <div class="message">
+            <p>Hôm nay, em chỉ muốn chị dừng lại một chút – để đọc những dòng này như thể đang lắng nghe nhịp đập trái tim em.</p>
+            <div class="quote">"Có những người chỉ cần hiện diện thôi, là thế giới đã ấm áp hơn rồi."</div>
+            <p>Chị có biết không – sự dịu dàng của chị không chỉ là một nét đẹp, mà là món quà. Có thể cuộc đời chẳng bao giờ thật sự công bằng, nhưng sự tồn tại của chị chính là điều công bằng hiếm hoi mà em từng biết đến.</p>
+            <p>Chị xứng đáng với tất cả yêu thương – không phải vì chị mạnh mẽ hay hoàn hảo, mà vì chị là chính chị: đầy cảm xúc, chân thành, và rực rỡ theo cách riêng không ai có thể thay thế.</p>
+            <p>Nếu có lúc chị thấy mình như một mớ hỗn độn mà chẳng ai hiểu nổi, hãy yên tâm – vẫn có ít nhất một người hiểu, và trân trọng từng điều đó.</p>
+            <p>Và nếu một ngày chị lỡ quên mất giá trị của mình, hãy quay lại đọc những dòng này. Đọc như đang tìm lại ánh sáng của chính mình.</p>
+            <p>Mong rằng cả đời này, chị đừng bao giờ nghĩ mình là vấn đề của bất kỳ ai – bởi chị luôn là món quà dịu dàng mà cuộc sống gửi đến thế giới này.</p>
+            <p>Dù có bước qua bao mùa giông gió, xin hãy nhớ – chính những vết xước, những điều chưa trọn vẹn nơi chị lại là điều khiến em chỉ muốn ôm chị thật khẽ. Như đang nâng niu món quà quý giá nhất em từng gặp trong đời.</p>
+            <p>Chị không sai khi chọn tin vào điều tử tế – kể cả khi điều đó khiến chị đau lòng. Bởi tử tế không phải là yếu đuối. Và chị chưa từng là gánh nặng – chị là ánh sáng dịu dàng giữa những nơi tưởng như không còn gì để dịu dàng nữa.</p>
+            <p>Nếu ai đó không thể trân quý chị, thì lỗi không nằm ở chị. Chỉ là… họ không đủ may mắn để hiểu chị tuyệt vời đến thế nào.</p>
+            <p><strong>Và nếu có lúc chị quên mất mình rực rỡ ra sao – hãy nhớ rằng vẫn luôn có một người tin rằng chị xứng đáng với tất cả những điều dịu dàng nhất trên đời.</strong></p>
+            <p>Chị là bản hòa âm mà thế giới chẳng thể bắt chước – nơi mỗi nốt trầm, nốt bổng đều mang câu chuyện riêng, và em chỉ muốn lặng im nghe mãi không thôi.</p>
+            <p>Thế giới này quá vội vã, quá ồn ào – nhưng trong chị, em nhìn thấy một chốn để dừng lại, thở ra nhẹ nhàng, và cảm nhận sự hiện diện của điều tử tế vẫn còn.</p>
+            <p>Chị không cần phải rực rỡ mọi lúc, cũng chẳng cần gồng mình để trở thành ai khác. Vì chỉ riêng chị, trong dáng vẻ mộc mạc và chân thành, đã là đủ đầy với những ai biết nhìn bằng trái tim.</p>
+            <p>Em không mong chị luôn mạnh mẽ. Em chỉ mong khi chị yếu mềm, chị biết rằng có một nơi – hay một người – vẫn luôn dịu dàng chờ chị dựa vào.</p>
+            <p>Có thể đôi khi chị thấy mình nhỏ bé giữa những điều lớn lao. Nhưng với ai đó, chính chị lại là cả một thế giới – là điều khiến họ muốn trở nên tử tế hơn, mỗi ngày.</p>
+            <p>Và nếu cuộc đời này có lúc khiến chị quên mất nụ cười của mình từng đẹp đến thế nào – thì xin chị, đừng cố gắng mỉm cười… hãy để em là người nhắc chị nhớ lại.</p>
+            <p>Vì chị không chỉ đáng yêu – chị đáng được yêu, trọn vẹn, không điều kiện. Không phải vì điều gì chị làm được, mà chỉ đơn giản vì chị tồn tại.</p>
+            <p><strong>Và với em, sự tồn tại ấy – chính là điều dịu dàng nhất mà cuộc sống từng trao tặng.</strong></p>
+        </div>
+        <button onclick="goBack()" class="back" style="margin-top: 25px;">⬅ Quay lại trang chính</button>
+    </div>
+
+    <img src="image/—Pngtree—cartoon dolphin vector_13154796.png" class="fish" style="animation-delay: 0s;">
+    <img src="image/—Pngtree—cartoon dolphin vector_13154796.png" class="fish" style="animation-delay: 7s; width: 100px; bottom: 20%;">
+
+    <audio id="bgMusic" loop>
+    <source src="music/utomp3.com - Phép Màu Đàn Cá Gỗ OST Mounter x MAYDAYs Minh Tốc Official MV.mp3" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ âm thanh.
+  </audio>
+
+    <script>
+        /* Bong bóng nổi */
+        function createBubble() {
+            const b = document.createElement('div');
+            b.classList.add('bubble');
+            b.style.left = Math.random() * 100 + 'vw';
+            b.style.animationDuration = (Math.random() * 4 + 3) + 's';
+            b.style.width = b.style.height = (Math.random() * 20 + 10) + 'px';
+            document.body.appendChild(b);
+            setTimeout(() => b.remove(), 7000);
+        }
+        setInterval(createBubble, 400);
+
+        /* Danh sách lời chúc */
+        const wishes = [
+            "Khi trăng lên",
+            "Đừng quên mang theo áo mưa",
+            "Cẩn thận với các phương tiện di chuyển",
+            "Hôm nay ít nói một chút sẽ tránh họa",
+            "Một tin cực vui sẽ đến với bạn trong hôm nay hoặc tuần này",
+            "Có gì đó không tốt đang đến với bạn, hãy cẩn thận",
+            "Không mưa thì hãy đi ra ngoài cho thoải mái",
+            "Đừng để hôm nay chỉ là những chuỗi ngày được chấm công",
+            "Tìm người để nói chuyện",
+            "Hôm nay hạn chế việc đi đâu đó xa nhé",
+            "Hôm nay có lẽ sẽ phải chi khá nhiều",
+            "Bạn nên nghỉ ngơi nhiều hơn",
+            "Cho bản thân cơ hội được hạnh phúc",
+            "Có một người thật sự rất yêu thương bạn",
+            "Về nhà với mẹ đi",
+            "Đi chùa",
+            "Thức mà bạn thấy chưa chắc là sự thật",
+            "Mọi điều tốt đẹp sẽ đến với chị – vì chị xứng đáng mà. 🌸",
+            "Em không biết là chuyện gì nhưng mà cảm giác lần này em thấy chị nên kiêng nhẫn 💪",
+            "Em biết chị đang rất mệt mỏi, nhưng em tin chị sẽ vượt qua được thôi. Cố lên nha! 🌟",
+            "Gọi cho em khi chị cần một người lắng nghe nhé! 📞",
+            "Nên làm",
+            "Không nên kỳ vọng quá nhiều",
+            "Đừng buồn nha, chỉ là hơi kém may mắn một xíu",
+            "Chị đang làm đúng rồi đó, tiếp túc nhé!",
+            "Không sao đây là điều cần phải làm",
+            "Chọn đi chị, tự tin lên, sai thì chọn lạii",
+            "Hôm nay là một ngày tuyệt vời để bắt đầu điều gì đó mới mẻ",
+            "Hãy tin vào bản thân mình, chị có thể làm được mọi thứ mà chị muốn",
+            "Chị là người đặc biệt và quan trọng, đừng bao giờ quên điều đó",
+            "Có thể hôm nay sẽ diễn ra điều mà chị không ngờ đến!",
+            "Vũ trụ đang lắng nghe bạn, hãy nói ra điều bạn thật sự mong muốn.",
+            "Câu trả lời sẽ đến khi tâm bạn đủ tĩnh.",
+            "Đôi khi im lặng chính là lời chỉ dẫn rõ ràng nhất.",
+            "Nếu bạn không chắc, hãy đợi thêm — thời gian sẽ tiết lộ sự thật.",
+            "Điều bạn đang tìm kiếm cũng đang tìm bạn.",
+            "Giấc mơ của bạn không hề viển vông, chỉ là cần thêm niềm tin.",
+            "Một cánh cửa đang khép lại, nhưng một cánh khác đang mở ra.",
+            "Niềm tin là chiếc chìa khóa mở ra mọi cánh cửa của định mệnh.",
+            "Nếu trái tim bạn cảm thấy bình yên, đó chính là câu trả lời.",
+            "Đừng ép vũ trụ trả lời khi bạn chưa sẵn sàng để lắng nghe.",
+            "Những linh hồn thiện lành đang dõi theo và bảo vệ bạn.",
+            "Bạn đang ở đúng nơi, đúng thời điểm, dù bạn chưa nhận ra.",
+            "Sự trùng hợp không bao giờ là ngẫu nhiên.",
+            "Một dấu hiệu sắp xuất hiện, hãy chú ý xung quanh bạn.",
+            "Đôi khi mất mát chỉ là cách vũ trụ dọn đường cho điều mới đến.",
+            "Hãy lắng nghe tiếng thì thầm của linh hồn mình.",
+            "Tất cả đều đã được sắp đặt — hãy an tâm mà bước tiếp.",
+            "Nếu bạn đang phân vân, hãy chọn điều khiến tâm bạn nhẹ nhõm hơn.",
+            "Một năng lượng tích cực đang dần bao quanh bạn.",
+            "Những gì bạn cho đi hôm nay sẽ trở lại theo cách bất ngờ nhất.",
+            "Một giấc mơ gần đây mang theo lời nhắn nhủ quan trọng.",
+            "Bạn không đơn độc — tổ tiên luôn ở bên bạn.",
+            "Khi bạn cảm thấy lạc lối, đó là lúc vũ trụ đang dẫn lối mới.",
+            "Câu trả lời không nằm ở bên ngoài, mà ở trong chính bạn.",
+            "Điềm lành đang đến — đừng nghi ngờ nữa.",
+            "Một người bạn cũ mang đến cơ hội mới.",
+            "Nếu bạn cảm thấy trái tim rung động, hãy tin vào nó.",
+            "Vật bạn mất đi sẽ trở lại theo cách khác.",
+            "Hãy để mọi thứ diễn ra tự nhiên — định mệnh đang hoạt động.",
+            "Một thay đổi lớn đang đến, hãy chuẩn bị tâm thế.",
+            "Bạn đang được thử thách để trở nên mạnh mẽ hơn.",
+            "Đôi khi im lặng là hành động khôn ngoan nhất.",
+            "Hãy tôn trọng dòng chảy tự nhiên của mọi việc.",
+            "Đừng tìm kiếm bên ngoài, vì câu trả lời đã ở trong bạn.",
+            "Một điều kỳ diệu sắp xảy ra khi bạn ít ngờ nhất.",
+            "Sự bình yên sẽ đến sau cơn bão.",
+            "Một dấu hiệu nhỏ hôm nay sẽ mở ra điều lớn lao.",
+            "Bạn đang được hướng dẫn đúng hướng.",
+            "Nếu điều đó khiến bạn sợ hãi, có thể nó rất đáng để thử.",
+            "Hãy tin tưởng vào dòng năng lượng đang dẫn dắt bạn.",
+            "Điều bạn mong đợi sẽ đến vào đúng lúc.",
+            "Một thông điệp sẽ đến qua giấc mơ.",
+            "Nếu bạn cảm thấy lo lắng, đó là tín hiệu để buông bỏ.",
+            "Hãy chậm lại — vũ trụ đang điều chỉnh nhịp sống của bạn.",
+            "Mọi thứ xảy ra đều vì lợi ích của bạn, dù bạn chưa thấy rõ.",
+            "Đừng sợ thay đổi, đó là cách vũ trụ mở đường cho bạn.",
+            "Một linh cảm bạn có gần đây là đúng.",
+            "Hãy biết ơn, vì lòng biết ơn mở ra phép màu.",
+            "Bạn đang được bảo vệ bởi ánh sáng thiêng liêng.",
+            "Một chương mới trong cuộc đời bạn sắp bắt đầu.",
+            "Nếu bạn thấy dấu hiệu lặp lại, đó không phải trùng hợp.",
+            "Một mối liên kết sâu sắc đang được hình thành.",
+            "Tâm càng tĩnh, đường đi càng sáng.",
+            "Hãy tin rằng mọi chuyện đều đang diễn ra đúng cách.",
+            "Bạn không cần hiểu hết — chỉ cần tin.",
+            "Một cơ hội từ vũ trụ đang đến gần.",
+            "Nếu bạn cảm thấy gọi tên một điều gì đó, hãy theo nó.",
+            "Một điều tốt đẹp đang nảy mầm trong bóng tối.",
+            "Hãy mở rộng trái tim, năng lượng mới sẽ tràn vào.",
+            "Một người lạ sắp mang đến thông điệp quan trọng.",
+            "Bạn đang được soi sáng bởi nguồn năng lượng cao hơn.",
+            "Nếu bạn nhìn thấy cùng con số nhiều lần, hãy lắng nghe ý nghĩa.",
+            "Một hành trình tâm linh sắp được khai mở.",
+            "Đừng vội quyết định — sự thật sẽ tự hiện ra.",
+            "Bạn đang đứng trước ngưỡng cửa của một chuyển hóa lớn.",
+            "Một giấc mơ xưa cũ sắp trở thành hiện thực.",
+            "Vũ trụ đang gửi bạn thử thách để đánh thức sức mạnh tiềm ẩn.",
+            "Đôi khi, mất phương hướng lại là con đường đúng.",
+            "Bạn được chọn để mang ánh sáng đến nơi tăm tối.",
+            "Một lời hứa cũ đang chuẩn bị được thực hiện.",
+            "Nếu bạn cảm thấy rung động trong tim, đó là sự thật.",
+            "Một người từ kiếp trước đang kết nối lại với bạn.",
+            "Hãy tin vào tiến trình — không có gì là ngẫu nhiên.",
+            "Một khoảng lặng ngắn hôm nay sẽ mang lại câu trả lời lớn.",
+            "Khi bạn dám buông bỏ, phép màu mới xuất hiện.",
+            "Ánh sáng trong bạn mạnh hơn bóng tối quanh bạn.",
+            "Một điều bạn không mong đợi sẽ mang đến niềm vui.",
+            "Nếu bạn cảm thấy được thôi thúc, hãy hành động ngay.",
+            "Vũ trụ thưởng cho sự can đảm.",
+            "Một điều nhỏ bạn làm hôm nay sẽ tạo ảnh hưởng lớn mai sau.",
+            "Bạn đang trong thời kỳ thức tỉnh.",
+            "Những điều cũ kỹ cần được rời đi để điều mới có thể đến.",
+            "Một người nào đó đang nghĩ về bạn với lòng biết ơn.",
+            "Nếu bạn thấy lặp lại cùng biểu tượng, đó là lời nhắn.",
+            "Bạn đang được nâng đỡ để vượt qua thử thách này.",
+            "Một món quà tinh thần đang chờ bạn nhận ra.",
+            "Trực giác của bạn là kim chỉ nam đáng tin cậy nhất.",
+            "Một giấc mơ xưa đang trở lại để hoàn thành sứ mệnh.",
+            "Ánh sáng sẽ soi rõ con đường bạn sắp đi.",
+            "Bạn đang ở trong giai đoạn chuyển hóa linh hồn.",
+            "Một cuộc gặp gỡ định mệnh đang đến gần.",
+            "Bạn sắp hiểu ra ý nghĩa của điều đã khiến bạn băn khoăn.",
+            "Vũ trụ muốn bạn nghỉ ngơi — hãy tin tưởng vào tiến trình.",
+            "Vũ trụ đang mỉm cười với bạn — hãy mở lòng để nhận lấy.",
+            "Một điều nhỏ hôm nay sẽ thay đổi hành trình của bạn.",
+            "Nghe theo trực giác, nó biết đường đi trước khi lý trí hiểu.",
+            "Ánh sáng nhỏ trong tim bạn sẽ dẫn lối qua đêm tối.",
+            "Một cánh cửa đóng lại để một điều tốt đẹp hơn bước vào.",
+            "Hãy thở sâu — câu trả lời đang đến từng nhịp thở.",
+            "Định mệnh không vội, nhưng nó luôn đúng hẹn.",
+            "Bạn nhận được một dấu hiệu, hãy chú ý những điều lặp lại.",
+            "Khi bạn buông tay, vũ trụ sẽ đặt một thứ tốt hơn vào tay bạn.",
+            "Một người bạn sẽ mang đến một cơ hội bất ngờ.",
+            "Niềm tin hôm nay sẽ tạo ra phép màu ngày mai.",
+            "Một giấc mơ chứa một gợi ý quan trọng — nhớ lại chi tiết.",
+            "Bạn không cần biết hết lộ trình, chỉ cần bước tiếp.",
+            "Người thân ở quá khứ đang gửi lời an ủi qua kí ức.",
+            "Một thay đổi nhỏ trong suy nghĩ sẽ mở rộng cả chân trời.",
+            "Âm thầm làm việc là cách vũ trụ trả lời những người kiên nhẫn.",
+            "Khoảnh khắc im lặng sẽ hé lộ lời chỉ dẫn sâu sắc.",
+            "Để ý những con số lặp lại — chúng mang thông điệp tinh tế.",
+            "Bạn đang trên con đường trở về với chính mình.",
+            "Thứ bạn tìm kiếm ngoài kia đang tìm đường vào đời bạn.",
+            "Đôi khi thất bại chỉ là bậc thang dẫn đến thành công.",
+            "Hãy tôn trọng trực giác của mình như một người bạn trung thành.",
+            "Một người lạ sẽ gõ cửa với tin vui.",
+            "Khi bạn cho đi, vũ trụ ghi nhận và trả lại gấp bội.",
+            "Khoảnh khắc này là bước đệm cho một chương mới.",
+            "Đừng vội trả lời — câu trả lời chân thật cần thời gian.",
+            "Âm thanh nhẹ sẽ dẫn bạn tới sự thật.",
+            "Bạn đang được che chở bởi những năng lượng tốt đẹp.",
+            "Một lời hứa cũ sắp được hiện thực hóa theo cách khác.",
+            "Đừng đánh giá vội kết quả — hãy nhìn vào tiến trình.",
+            "Một điều kỳ diệu đến từ sự dũng cảm nhỏ bé.",
+            "Chọn con đường khiến tim bạn bình an hơn.",
+            "Một mối liên hệ cũ sẽ mang đến một góc nhìn mới.",
+            "Bạn được mời tham gia vào một cuộc chuyển hóa nhẹ nhàng.",
+            "Đôi khi câu trả lời là một cái gật đầu nhỏ của trái tim.",
+            "Nghe tiếng thì thầm của cơ thể, đó là ngôn ngữ chân thật.",
+            "Hãy tin vào chu kỳ — mọi thứ có thời điểm riêng.",
+            "Một ánh chớp ý tưởng sẽ soi đường cho bạn.",
+            "Bạn có thể mệt nhưng không thất bại — chỉ cần nghỉ ngơi.",
+            "Một món quà tinh thần đang chờ bạn ở nơi ít ngờ tới.",
+            "Buông bỏ không phải là thua cuộc, mà là nhường chỗ cho tốt hơn.",
+            "Bạn sẽ gặp dấu hiệu trong một cuộc trò chuyện tình cờ.",
+            "Để mắt đến những biểu tượng xuất hiện trước mắt bạn.",
+            "Sự thật sẽ hiện ra khi bạn đủ can đảm để nhìn thẳng.",
+            "Một ký ức đẹp sẽ trở thành nguồn sức mạnh cho bạn.",
+            "Thả lỏng — vũ trụ đang dọn đường cho kế hoạch tốt hơn.",
+            "Ngọn lửa nhỏ trong bạn đang dần bùng thành ngọn đuốc.",
+            "Bạn được khuyến khích bước ra khỏi vùng an toàn.",
+            "Một điều bạn cho là nhỏ sẽ có ảnh hưởng lớn về sau.",
+            "Hãy để lòng biết ơn dẫn lối mỗi sáng.",
+            "Bạn sẽ tìm thấy manh mối trong những điều vô thường.",
+            "Thời điểm bạn chờ đợi đang đến gần hơn bạn nghĩ.",
+            "Đôi khi thay đổi bắt đầu bằng một câu nói nhỏ.",
+            "Trực giác của bạn là la bàn của linh hồn.",
+            "Bạn được nhắc nhớ rằng mọi vết thương đều có thể chữa lành.",
+            "Một người sẽ cho bạn lời khuyên đáng giá bằng một câu nói ngắn.",
+            "Hãy đặt niềm tin vào quá trình hơn là vào kết quả ngắn hạn.",
+            "Bạn đang tiến gần tới một nhận thức mới về bản thân.",
+            "Ai đó đang nghĩ về bạn với lòng biết ơn và ấm áp.",
+            "Những điều tốt đẹp thường đến dưới hình thức bất ngờ.",
+            "Bạn có nhiều sức mạnh hơn những gì bạn nghĩ.",
+            "Một ngày im lặng sẽ mở ra một tuần tràn đầy hy vọng.",
+            "Đừng vội buông — sự chờ đợi có thể là điều đúng đắn.",
+            "Một dòng chảy năng lượng tích cực đang tiến về phía bạn.",
+            "Cho phép mình nghỉ ngơi để ánh sáng mới có thể mọc lên.",
+            "Một cơ hội sẽ đến qua một kết nối nhỏ bạn từng bỏ qua.",
+            "Hãy tin rằng bạn xứng đáng với những điều đẹp nhất.",
+            "Một giấc mơ ngắn sẽ đem đến manh mối quan trọng.",
+            "Bạn sắp nhận ra lý do của một cuộc gặp gỡ cũ.",
+            "Đôi khi dấu hiệu là một bài hát vang lên đúng lúc.",
+            "Hãy chăm sóc bản thân — đó là cách bạn tôn trọng đường đi của mình.",
+            "Một sự thấu hiểu sẽ đến qua một cuộc trò chuyện chân thành.",
+            "Bạn hãy để trực giác dẫn bước, trí nhớ sẽ theo sau.",
+            "Ánh sáng nhỏ hôm nay sẽ trở thành ngọn đèn dẫn đường mai sau.",
+            "Bạn được mời mở lòng để nhận lời dẫn dắt từ bên trong.",
+            "Thở ra từng nỗi lo — thở vào niềm tin mới.",
+            "Bạn sẽ tìm thấy sự an ủi trong câu chuyện của chính mình.",
+            "Đôi khi cần một bước lùi để thấy toàn cảnh rõ hơn.",
+            "Bạn có quyền thay đổi suy nghĩ — và bắt đầu lại.",
+            "Những gì bị che khuất sẽ được soi sáng vào thời điểm đúng.",
+            "Một niềm vui nhỏ sẽ kéo theo một chuỗi may mắn.",
+            "Bạn đang được thử thách để khám phá bản thân sâu hơn.",
+            "Đừng xấu hổ khi cần giúp đỡ — đó là dấu hiệu của sức mạnh.",
+            "Bạn sắp nhận được một tin nhắn mang ý nghĩa đặc biệt.",
+            "Chọn hành động khiến bạn cảm thấy trung thực với bản thân.",
+            "Bạn được dẫn dắt bởi một nguồn năng lượng tinh tế.",
+            "Đôi khi câu trả lời nằm trong sự im lặng giữa hai hơi thở.",
+            "Bạn sẽ thấy điều sáng lên khi bạn cho phép mình mơ.",
+            "Những giới hạn cũ đang dần tan biến để nhường chỗ cho mới.",
+            "Bạn đang trên đường tìm lại tiếng nói nội tại của mình.",
+            "Để ý màu sắc bạn thường mơ — chúng có thể là chỉ dẫn.",
+            "Hãy chậm lại, lắng nghe và tin vào cảm nhận đầu tiên.",
+            "Bạn được nhắc: không phải mọi trận bão đều là kết thúc.",
+            "Một người cũ có thể mang đến một kết nối chữa lành.",
+            "Bạn có thể thay đổi thế giới bằng một cử chỉ nhỏ tử tế.",
+            "Đừng bỏ qua ý tưởng vụt qua đầu bạn — nó có thể là tín hiệu.",
+            "Bạn đang nhận được sự chuẩn bị từ vũ trụ cho điều lớn hơn.",
+            "Tin đi, một cơ hội mới đang xuất hiện.",
+            "Đừng hoảng loạn: người bạn cần sẽ xuất hiện đúng lúc.",
+            "Nhìn kỹ, niềm vui sẽ đến theo cách bất ngờ.",
+            "Hãy tin: một điều tốt đẹp sắp nảy mầm.",
+            "Bạn sẽ thấy rằng bạn đang được che chở.",
+            "Nhớ lấy rằng tâm bạn đang tìm về nhà.",
+            "Yên lòng, lời cầu nguyện của bạn đang lắng nghe.",
+            "Chậm lại và một bước nhỏ sẽ tạo khác biệt lớn.",
+            "Vũ trụ nói rằng một điều tốt đang được chuẩn bị cho bạn.",
+            "Một lời nhắc nhở: bạn sẽ tìm thấy hướng đi mới.",
+            "Không cần vội vàng, bạn đang nhận được manh mối tinh tế.",
+            "Cho dù thế nào, dấu hiệu vẫn sẽ xuất hiện theo thời điểm.",
+            "Bạn đang được nhắc rằng điều nhỏ hôm nay thành lớn mai sau.",
+            "Trong lặng lẽ, một cơ hội mới âm thầm hình thành.",
+            "Nghe theo sự thôi thúc, nó dẫn bạn tới điều đúng đắn.",
+            "Đây là lúc để tin tưởng vào tiến trình hơn là kết quả.",
+            "Bạn sẽ nhận thấy một người mang thông điệp an ủi.",
+            "Thời điểm này báo hiệu rằng một phép màu nhỏ sẽ đến.",
+            "Đừng quên rằng mỗi bước đều có ý nghĩa riêng của nó.",
+            "Tin đi, một người bạn sẽ trao cho bạn một góc nhìn mới.",
+            "Đừng hoảng loạn: điều bạn cần sẽ đến theo cách nhẹ nhàng.",
+            "Nhìn kỹ, một dấu hiệu sẽ xuất hiện giữa những điều đời thường.",
+            "Hãy tin: một thay đổi tích cực đang đến gần.",
+            "Bạn sẽ thấy rằng lòng biết ơn mở ra nhiều cánh cửa.",
+            "Nhớ lấy rằng câu trả lời đôi khi đến qua giấc mơ.",
+            "Yên lòng, mọi thứ đều có thời điểm để bộc lộ.",
+            "Chậm lại và đọc được tín hiệu qua những điều nhỏ nhặt.",
+            "Vũ trụ nói rằng hãy để tâm bạn nghỉ ngơi đôi chút.",
+            "Một lời nhắc nhở: bạn xứng đáng nhận được điều tốt đẹp.",
+            "Không cần vội vàng, phép màu vẫn đang được dệt nên.",
+            "Cho dù thế nào, một manh mối sẽ đến qua cuộc trò chuyện.",
+            "Bạn đang được nhắc rằng hãy tin vào tiếng gọi bên trong.",
+            "Trong lặng lẽ, trực giác của bạn sẽ dần rõ ràng hơn.",
+            "Nghe theo sự thôi thúc, và bạn sẽ thấy cánh cửa mở ra.",
+            "Đây là lúc để giữ niềm tin ngay cả khi không thấy kết quả.",
+            "Bạn sẽ nhận thấy một cơ hội nhỏ dẫn tới điều lớn lao.",
+            "Thời điểm này báo hiệu rằng sự chuyển mình đang xảy ra.",
+            "Đừng quên rằng lòng biết ơn làm mạnh thêm bước chân bạn.",
+            "Tin đi, một cuộc gặp gỡ nhỏ sẽ thay đổi suy nghĩ bạn.",
+            "Đừng hoảng loạn: bạn có sức chịu đựng nhiều hơn bạn nghĩ.",
+            "Nhìn kỹ, một điều tốt sẽ xuất hiện trong những phút thường nhật.",
+            "Hãy tin: một câu trả lời dịu dàng đang đến với bạn.",
+            "Bạn sẽ thấy rằng sự tĩnh lặng đem lại nhiều lời khuyên.",
+            "Nhớ lấy rằng đôi khi trả lời chỉ là một cảm giác bình an.",
+            "Yên lòng, mọi thử thách đều mang theo bài học quý giá.",
+            "Chậm lại và bạn sẽ lắng nghe được lời của trái tim.",
+            "Vũ trụ nói rằng hãy dũng cảm trong những bước chân đầu tiên.",
+            "Một lời nhắc nhở: hôm nay bạn gieo, mai bạn gặt.",
+            "Không cần vội vàng, mọi mảnh ghép sẽ dần khớp nối.",
+            "Cho dù thế nào, điều bạn cần có thể đến qua người lạ.",
+            "Bạn đang được nhắc rằng hãy mở lòng để nhận điều mới.",
+            "Trong lặng lẽ, bạn đang được hồi đáp từ bên trong.",
+            "Nghe theo sự thôi thúc, và lòng bạn sẽ tìm thấy câu trả lời.",
+            "Đây là lúc để kiên nhẫn — kết quả thường không vội vàng.",
+            "Bạn sẽ nhận thấy ánh sáng khi bạn cho phép bản thân mong chờ.",
+            "Thời điểm này báo hiệu một khởi đầu tinh tế đang tới.",
+            "Đừng quên rằng mỗi niềm tin nhỏ đều góp phần tạo nên phép màu.",
+            "Tin đi, một cơ hội sẽ đến qua một cuộc trò chuyện tình cờ.",
+            "Đừng hoảng loạn: dấu hiệu có thể đến dưới dạng một bài hát.",
+            "Nhìn kỹ, một biểu tượng lặp lại mang theo thông điệp cho bạn.",
+            "Hãy tin: hành trình này đang dạy bạn cách yêu chính mình.",
+            "Bạn sẽ thấy rằng sự mềm mại trong lòng là sức mạnh.",
+            "Nhớ lấy rằng đôi khi chỉ cần một câu nói chân thành là đủ.",
+            "Yên lòng, vũ trụ không quên những mong ước chân thành.",
+            "Chậm lại và bạn sẽ nhận ra ai là người đồng điệu với bạn.",
+            "Vũ trụ nói rằng hãy tin vào những cảm giác đầu tiên của bạn.",
+            "Một lời nhắc nhở: không phải mọi cánh cửa đóng đều xấu.",
+            "Không cần vội vàng, câu trả lời thường đến qua thời gian.",
+            "Cho dù thế nào, một người bạn cũ có thể mở ra cơ hội mới.",
+            "Bạn đang được nhắc rằng mọi sắp xếp đều có lí do riêng.",
+            "Trong lặng lẽ, một sự chữa lành âm thầm đang diễn ra.",
+            "Nghe theo sự thôi thúc, vì đôi khi nó là lời của linh hồn.",
+            "Đây là lúc để tin vào trực giác hơn là nghe tiếng ồn xung quanh.",
+            "Bạn sẽ nhận thấy sự khác biệt khi bạn buông bỏ gánh nặng.",
+            "Thời điểm này báo hiệu rằng một lời nhắc sẽ đến qua giấc mơ.",
+            "Đừng quên rằng một hành động nhỏ cũng có thể là phép màu.",
+            "Tin đi, tình cờ hôm nay có thể là cái duyên của mai sau.",
+            "Đừng hoảng loạn: bạn được dẫn dắt bởi một năng lượng ôn hòa.",
+            "Nhìn kỹ, dấu hiệu có thể là một mùi hương thoảng qua.",
+            "Hãy tin: lòng biết ơn sẽ khuếch tán mọi sợ hãi.",
+            "Bạn sẽ thấy rằng sự nhẹ nhàng thắng thế khi bạn kiên trì.",
+            "Nhớ lấy rằng một người đúng lúc sẽ xuất hiện trên đường bạn đi.",
+            "Yên lòng, kể cả sai lầm cũng là một phần của con đường học hỏi.",
+            "Chậm lại và tìm niềm vui trong những chi tiết nhỏ bé.",
+            "Vũ trụ nói rằng đừng đánh giá vội bản thân — bạn đang lớn lên.",
+            "Một lời nhắc nhở: đôi khi cần lắng nghe hơn để biết phải làm gì.",
+            "Không cần vội vàng, phép màu cần thời gian để nảy mầm.",
+            "Cho dù thế nào, bạn luôn có thể bắt đầu lại từ hôm nay.",
+            "Bạn đang được nhắc rằng tiếng lòng mình là la bàn chính xác nhất.",
+            "Trong lặng lẽ, sức mạnh thật sự được nuôi dưỡng âm thầm.",
+            "Nghe theo sự thôi thúc, và bạn sẽ thấy cánh cửa mới hé mở.",
+            "Đây là lúc để cho bản thân quyền được yếu mềm và chữa lành.",
+            "Bạn sẽ nhận thấy một người trao cho bạn ánh nhìn khác biệt.",
+            "Thời điểm này báo hiệu rằng một điều đẹp sẽ khởi đầu từ nhỏ.",
+            "Đừng quên rằng một nụ cười đúng lúc có thể cứu rỗi một ngày đen tối.",
+            "Tin đi, bạn đang được bảo vệ bởi điều gì đó lớn lao hơn bạn.",
+            "Đừng hoảng loạn: mọi việc sẽ trở nên rõ ràng khi bạn đủ bình tĩnh.",
+            "Nhìn kỹ, một biểu tượng nhỏ lặp lại có thể là thông điệp của vũ trụ.",
+            "Hãy tin: đôi khi lời đáp nằm trong hành động giản dị nhất.",
+            "Bạn sẽ thấy rằng sự chân thành luôn tìm ra đường kết nối.",
+            "Nhớ lấy rằng đôi khi chỉ cần một giấc ngủ ngon để thay đổi mọi thứ.",
+            "Yên lòng, trái tim bạn biết con đường về, hãy nghe nó.",
+            "Chậm lại và để ý đến những điều mang lại cảm giác ấm áp.",
+            "Vũ trụ nói rằng bạn xứng đáng nhận niềm vui đơn thuần nhất.",
+            "Một lời nhắc nhở: hành trình chữa lành bắt đầu bằng một bước nhỏ.",
+            "Cần sự tỉnh táo",
+            "Không cần nghĩ quá nhiều",
+            "Không đơn giãn là như vậy",
+            "Chờ đợi thời điểm thích hợp",
+            "Không hẳn là chuyện tốt",
+            "Không hẳn là không tốt",
+            "Người đó sắp xuất hiện",
+            "Người đặc biệt sẽ đến",
+            "Hãy tin vào trực giác của mình",
+            "Hôm nay bạn nên tôn trọng cảm xúc của bản thân hơn",
+            "Hôm nay hãy thành thật hơn một chút",
+            "Chăm sóc bản thân",
+            "Nên giữ bình tĩnh bằng mọi cách trong hôm nay",
+            "Một nhân vật không mong muốn sẽ đến gần bạn",
+            "Con số kì lạ hôm nay là 4",
+            "Con số kì lạ hôm nay là 1",
+            "Con số kì lạ hôm nay là 2",
+            "Con số kì lạ hôm nay là 3",
+            "Con số kì lạ hôm nay là 7",
+            "Con số kì lạ hôm nay là 9",
+            "Con số kì lạ hôm nay là 8",
+            "Con số kì lạ hôm nay là 5",
+            "Con số kì lạ hôm nay là 6",
+            "Cẩn thận với người gần bạn nhất",
+            "Hãy để ý đến những giấc mơ của bạn",
+            "Tìm một nơi yên tĩnh",
+            "Gọi cho người bạn nghĩ đến đầu tiên sau khi đọc câu này",
+            "Hãy chọn cách im lặng",
+            "Một điều bất ngờ sẽ đến với bạn",
+            "Hôm nay bạn nên tránh xa mạng xã hội",
+            "Cơ hội lớn đang đến",
+            "Quyết định của bạn hôm nay sẽ là tương lai của ai đó",
+            "Đừng",
+            "Không nên",
+            "Nên",
+            "Cẩn thận",
+            "Hãy lắng nghe trái tim mình",
+            "Chọn người bạn tin tưởng để chia sẻ",
+            "Chọn người thương bạn",
+            "Nói nhiều hơn một chút"
+        ];
+
+        function showWish() {
+            document.getElementById('openingScreen').style.display = 'none';
+            const wish = wishes[Math.floor(Math.random() * wishes.length)];
+            document.getElementById('wishText').innerText = `"${wish}"`;
+            document.getElementById('wishScreen').style.display = 'block';
+            // Cuộn lên đầu trang
+            window.scrollTo(0, 0);
+        }
+
+        function showLogin() {
+            document.getElementById('wishScreen').style.display = 'none';
+            document.getElementById('login').style.display = 'block';
+            // Cuộn lên đầu trang
+            window.scrollTo(0, 0);
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('password').value;
+            if (input === 'chiphaisongthathanhphucnha') {
+                document.getElementById("login").style.display = "none";
+                document.getElementById("mainCard").style.display = "block";
+                const music = document.getElementById("bgMusic");
+                music.volume = 0.4;
+                music.play().catch(e => console.log("Trình duyệt không cho tự động phát nhạc."));
+                // Cuộn lên đầu trang
+                window.scrollTo(0, 0);
+            } else {
+                document.getElementById("error").textContent = "Sai mật khẩu rồi bé ơi 🐠";
+            }
+        }
+
+        function goBack() {
+            // Ẩn tất cả các phần
+            document.getElementById('wishScreen').style.display = 'none';
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('mainCard').style.display = 'none';
+
+            // Dừng nhạc nếu đang phát
+            const music = document.getElementById("bgMusic");
+            music.pause();
+            music.currentTime = 0;
+
+            // Quay lại trang hướng dẫn
+            document.getElementById('openingScreen').style.display = 'block';
+            // Cuộn lên đầu trang
+            window.scrollTo(0, 0);
+        }
+
+        function goHome() {
+            // Ẩn tất cả các phần (Thực ra không cần thiết vì trang sắp chuyển đi)
+            // document.getElementById('wishScreen').style.display = 'none';
+            // document.getElementById('login').style.display = 'none';
+            // document.getElementById('mainCard').style.display = 'none';
+
+            // Dừng nhạc nếu đang phát (Phần này QUAN TRỌNG, nên giữ lại)
+            const music = document.getElementById("bgMusic");
+            if (music) { // Thêm kiểm tra "if (music)" để tránh lỗi
+                music.pause();
+                music.currentTime = 0;
+            }
+
+            // Quay lại trang index.html
+            // Dùng dòng này để điều hướng trình duyệt sang file index.html
+            window.location.href = 'index.html';
+
+            // Dòng scrollTo(0, 0) không cần thiết vì trang mới sẽ tự động ở trên cùng.
+        }
+        // FIX 13: Thêm một sự kiện click đầu tiên để kích hoạt âm thanh (do chính sách của trình duyệt)
+        document.body.addEventListener('click', () => {
+            const music = document.getElementById("bgMusic");
+            if (music.paused && document.getElementById("mainCard").style.display === "block") {
+                music.play().catch(e => {});
+            }
+        }, {
+            once: true
+        }); // Chỉ chạy 1 lần
+    </script>
+</body>
+
+</html>
